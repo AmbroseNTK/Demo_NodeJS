@@ -1,0 +1,25 @@
+{
+  "name": "appdemo1",
+  "version": "1.0.0",
+  "description": "Demo about NodeJS",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Jonrobin/Demo_NodeJS.git"
+  },
+  "keywords": [
+    "demoJS"
+  ],
+  "author": "Kiet Tuan Nguyen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Jonrobin/Demo_NodeJS/issues"
+  },
+  "homepage": "https://github.com/Jonrobin/Demo_NodeJS#readme",
+  "dependencies": {
+    "node-persist": "0.0.6"
+  }
+}
