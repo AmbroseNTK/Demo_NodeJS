@@ -1,82 +1,120 @@
 console.log("Hello World");
-var storage=require("node-persist")
-storage.initSync({dir:"students"});
+var storage = require("node-persist")
+storage.initSync({ dir: "students" });
 
-var yargs=require("yargs");
+var yargs = require("yargs");
 
-    // Hàm lấy danh sách sinh viên
-function getAllStudents()
-{
-    // Lấy sinh viên từ nơi lưu trữ
-    var students = storage.getItemSync('students');
-    // Nếu không có sinh viên nào thì trả về một mảng rỗng
-    if (typeof students === "undefined"){
-        return [];
-    }
-    // Ngược lại sẽ trả về danh sách sinh viên
-    return students;
-}
-// Hàm lấy chi tiết sinh viên theo id của sinh viên
-function getStudent(studentId)
-{
-    // Lấy danh sách sinh viên
-    var students = getAllStudents();
-     
-    // Biến lưu trữ sinh viên được tìm thấy
-    var matchedStudent = null;
-     
-    // Lặp để tìm sinh viên
-    for (var i = 0; i < students.length; i++){
-        if (students[i].id === studentId){
-            matchedStudent = students[i];
-            break;
-        }
+var storage = require('node-persist');
+
+storage.initSync({
+    dir: "mydata",
+    ttl: false
+});
+
+function getAllStudents() {
+    var students = storage.getItemSync('students');
+    if (typeof students === "undefined") {
+        return [];
     }
-     
-    return matchedStudent;
+
+    return students;
 }
-// Hàm thêm một sinh viên
-function addStudent(id, fullname)
-{
+
+
+function showStudents() {
     var students = getAllStudents();
-     
+    for (var i = 0; i < students.length; i++) {
+        console.log('Student: ' + students[i].fullname + "(" + students[i].id + ")");
+    }
+}
+
+function addStudent(studentId, studentName) {
+    var students = getAllStudents();
     students.push({
-        id : id,
-        fullname : fullname
+        id: studentId,
+        fullname: studentName
     });
-     
+
     storage.setItemSync('students', students);
 }
-// Hàm xóa sinh viên
-function removeStudent(studentId)
-{
+
+function removeStudent(studentId) {
     var students = getAllStudents();
-     
-    for (var i = 0; i < students.length; i++){
-        if (students[i].id === studentId){
+
+    for (var i = 0; i < students.length; i++) {
+        if (students[i].id === studentId) {
             students.splice(i, 1);
         }
     }
-     
+
     storage.setItemSync('students', students);
 }
-function editStudent(studentId, studentName)
-{
+
+function editStudent(studentId, studentName) {
     var students = getAllStudents();
- 
-    for (var i = 0; i < students.length; i++){
-        if (students[i].id === studentId){
+
+    for (var i = 0; i < students.length; i++) {
+        if (students[i].id === studentId) {
             students[i].fullname = studentName;
         }
     }
-     
+
     storage.setItemSync('students', students);
 }
-// Hàm hiển thị danh sách sinh viên
-function showStudents()
-{
-    var students = getAllStudents();
-    students.forEach(function(student){
-        console.log('Student: ' + student.fullname + ' (' + student.id + ')');
-    });
+
+var argv = yargs
+    .command("list", "Get a list's student", function (yargs) {
+
+    })
+    .command("create", "Create a new student", function (yargs) {
+        return yargs.option({
+            id: {
+                demand: true,
+                type: "number"
+            },
+            fullName: {
+                demand: true,
+                type: "string"
+            }
+        })
+    })
+    .command('edit', 'Edit a Student', function (yargs) {
+        return yargs.options({
+            id: {
+                demand: true,
+                type: "number"
+            },
+            fullname: {
+                demand: true,
+                type: "string"
+            }
+        });
+    })
+    .argv;
+
+var action = argv._[0];
+// Lấy tên action
+var action = argv._[0];
+ 
+if (action === 'list'){
+    showStudents();
+}
+else if (action === 'create'){
+    addStudent(argv.id, argv.fullName);
+    console.log('Add Successfully!');
+    showStudents();
+}
+else if (action === 'delete'){
+    removeStudent(argv.id);
+    console.log('Delete Successfully!');
+    showStudents();
+}
+else if (action === 'edit'){
+    editStudent(argv.id, argv.fullName);
+    console.log('Edit Successfully!');
+    showStudents();
+}
+else{
+    console.log('Input invalid');
+    showStudents();
 }
