@@ -1,6 +1,9 @@
 console.log("Hello World");
 var storage=require("node-persist")
 storage.initSync({dir:"students"});
+
+var yargs=require("yargs");
+
     // Hàm lấy danh sách sinh viên
 function getAllStudents()
 {
@@ -77,10 +80,3 @@ function showStudents()
         console.log('Student: ' + student.fullname + ' (' + student.id + ')');
     });
 }
-
-addStudent(1, 'Nguyen');
-addStudent(2, 'Tuan');
-addStudent(3, 'Kiet');
-addStudent(4, 'Bin');
-
-showStudents();
